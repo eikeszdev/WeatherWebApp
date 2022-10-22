@@ -1,3 +1,187 @@
-.App {
-  text-align: center;
+/* #App {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 30px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+} */
+
+*{
+  padding: 0;
+  margin: 0;
+  font-family: 'ubuntu', sans-serif;
+}
+/* 
+#App main{
+  margin-left: 30px;
+} */
+
+/*Responsividade*/
+/*qnd chegar a 1000px eu alinho tudo em coluna pra ficar 1 abaixo do outro*/
+
+/* Estilos gerais + Parte de fundo */
+@media (max-width: 1000px) {
+  #App{
+      flex-direction: column;
+      /* height: 100vh; */
+      margin: 0px;
+      /* padding: 30px 0px; */
+  }
+
+  body{
+    background: linear-gradient(180deg, #2c3035 0%, #2D3540 100%);
+  }
+
+  .Header {
+    background-color: red;
+    width: 100%;
+    height: 0.6fr;
+    
+    display: flex;
+    justify-content: space-between;
+  }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+
+    align-items: center;
+    justify-content: center;
+
+    background: linear-gradient(180deg, #2c3035 0%, #2c3542 100%);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    padding: 2rem;
+    border-radius: 1rem;
+    color: #fdfdfd;   
+    padding: 0;
+  }
+
+  main h1 {
+    margin-top: 30px;
+  }
+
+/* Estilos gerais */
+  .title {
+    color:  #F2B705;
+  }
+
+  .subtitle {
+  }
+
+  .hide {
+    display: none;
+}
+
+/* FORMS */
+
+form {    
+  /* background-color: #F2B705; */
+  background: linear-gradient(180deg, rgb(245, 196, 50), #d4a619 100%);
+
+  color: #2D3540;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  
+  width: 90%;
+  border-radius: 4px;
+  padding: 10px 0px;
+}
+
+form h3 {
+  margin: auto;
+  padding: 20px 0px;
+}
+
+.input-block {
+  display: flex;
+  flex-direction: column;
+  padding: 0px 20px 20px;
+}
+
+.input-block label {
+  width: fit-content;
+  font-weight: bold;
+
+}
+
+.input-block input {
+  width: 40%;
+  margin: 5px 0px 5px 0px;
+  padding: 8px;
+  border: none;
+  flex: 1;
+}
+
+.form-button {
+  border-radius: 5px;
+  width: 20vh;
+  height: 40px;
+  margin: auto;
+  border: none;
+  cursor: pointer;
+
+  background-color: #2D3540;
+  color: #F2DBAE;
+}
+
+/* RESULTS */
+
+.result {
+  margin: 20px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.result span {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.result-title {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 0px 100px;
+}
+
+.result-title span{
+  font-size: 28px;
+  margin: 0px 20px;
+  font-weight: bold;
+}
+
+.result-title img {
+  height: 30px;
+  width: 40px;
+}
+
+.result-date {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  justify-content: center;
+  align-items: center;
+}
+
+.result-date img {
+  height: 90px;
+}
+
+.result-data {
+  display: flex;
+  flex-direction: column;
+  line-height: 30px;
+}
+/* #App main{
+    margin-left: 0;
+    margin-top: 30px;
+}
+
+  #App aside{/*ocupar a tela toda com o "cadastro"*/
+      /* width: 100%; */
+ /*} */
 }

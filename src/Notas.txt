@@ -1,0 +1,40 @@
+// CARREGAR FUNÇÃO DA API 
+
+async function loadApi(e) {
+    e.preventDefault();
+    console.log('teste')
+      // const response = await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${loc},SP,BR&limit=5&appid=${myApiKey}`);
+      
+      // if(weatherResponse === {} && cityResponse === {}) {
+        try {
+          const response = await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${city},BR&limit=5&appid=${myApiKey}`);
+          console.log(response.data);
+          const latCity = response.data[0].lat;
+          const longCity = response.data[0].lon;
+          console.log('latitude = ' + latCity)
+          console.log('longitude = ' + longCity)
+          const weatherResponse = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${latCity}&lon=${longCity}&units=metric&appid=${myApiKey}`)
+          console.log(weatherResponse.data);
+
+          // const cityData = await response.json();
+          // const foreCastData = await weatherResponse.json();
+          // console.log('cityData = ' + cityData);
+          // console.log('foreCastData = ' + foreCastData);
+          await setCityResponse(response.data);
+          await setWeatherState([...weatherState, weatherResponse.data]);
+          console.log('State Weather = ' + weatherState)
+          console.log('State city = ' + cityResponse[0])
+        } catch (error) {
+          return console.log(error)
+        }
+        
+      // }
+
+    // console.log(city); 
+  }
+
+  API USADA PARA PREVISÃO FUTURA:
+  https://api.openweathermap.org/data/2.5/forecast?lat=57&lon=-2.15&cnt=3&appid={API key}
+
+// PESQUISAR COMO ARMAZENAR DADOS SÓ NA SESSÃO OU POR TEMPO DETERMINADO NO LOCAL STORAGE, OU SESSION STORAGE
+SE HOUVER O DADO DE X CIDADE NÃO CHAMAR A API NOVAMENTE
