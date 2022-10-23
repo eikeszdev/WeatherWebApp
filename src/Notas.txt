@@ -38,3 +38,15 @@ async function loadApi(e) {
 
 // PESQUISAR COMO ARMAZENAR DADOS SÓ NA SESSÃO OU POR TEMPO DETERMINADO NO LOCAL STORAGE, OU SESSION STORAGE
 SE HOUVER O DADO DE X CIDADE NÃO CHAMAR A API NOVAMENTE
+
+
+- forecast api
+ NO ARRAY DE HORAS COM PREVISÃO, A CADA 7 ITEMS/Posições É UM DIA, DE 0 A 6
+ day one - 0 - 6
+ day two - 7 - 14
+ day three - 15 - 22
+ day for - 23 - 30
+ day five - 31 - 38
+ array 39 -> descartavel
+
+ ----- TODO -> Melhorar par apuxar pelo texto de data mesmo ao invés de array
