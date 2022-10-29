@@ -14,13 +14,17 @@ function App() {
   /// só preciso da req de previsão que já tem a cidade
   const [city, setCity] = useState('');
   const [cep, setCep] = useState("");
+  const [hourRangeValue, setHourRangeValue] = useState(null);
 
-  const [hourForecast, setHourForecast] = useState(null);
-  const [dayForecast, setDayForecast] = useState([]);
+  const [hourForecast, setHourForecast] = useState();
+  const [dayForecast, setDayForecast] = useState();
 
   useEffect(() => {
-    console.log(weather); 
-  }, [weather, forecast])
+    // console.log(weather); 
+    console.log('UseEffect loads')
+    // console.log('Date State: '); // working
+    // console.log(dayForecast)
+  }, [weather, forecast, hourForecast, hourRangeValue])
   
   async function handleLoadWeather(e) {
     e.preventDefault();
@@ -58,7 +62,7 @@ function App() {
 
   function getDateSplited(dateAsString) {
     // Teste de separação da data e hora
-    const dateTotal = forecast.list[0].dt_txt.split(' ');
+    const dateTotal = dateAsString.split(' ');
     // console.log(dateTotal)
     const dateSplited = dateTotal[0].split('-')
     // console.log(dateSplited)
@@ -85,7 +89,7 @@ function App() {
     };
     // console.log('data dividida e separada por data: ')
     // console.log(finalSplitedDate)
-    return (finalSplitedDate)
+    return finalSplitedDate
   }
 
   async function handleForecastDay(e, inputValue) {
@@ -112,6 +116,7 @@ function App() {
       const dataFromDayOne = forecast.list.filter((day) => day.dt_txt.split(' ')[0] === fullDateToCompare.split(' ')[0]);
       console.log(`retornando todos os dados do 1° dia ${fullDateToCompare}`); 
       console.log(dataFromDayOne);
+      setDayForecast(dataFromDayOne); // armazenando a data escolhida no estado
 
     } else if(inputValue === 'day-two') {
       //testando mesma função do dia 01 agora para o 2° dia
@@ -132,6 +137,7 @@ function App() {
       console.log(`retornando todos os dados do 2° dia ${fullDateToCompare}`); 
       console.log(dataFromDayTwo);
       // working
+      setDayForecast(dataFromDayTwo); // armazenando a data escolhida no estado
     } else if(inputValue === 'day-three') {
       console.log('dia 03')
       // pegar a data do 1° dia disponível na API
@@ -149,6 +155,9 @@ function App() {
       const dataFromDayThree = forecast.list.filter((day) => day.dt_txt.split(' ')[0] === fullDateToCompare.split(' ')[0]);
       console.log(`retornando todos os dados do 3° dia ${fullDateToCompare}`); 
       console.log(dataFromDayThree);
+
+      setDayForecast(dataFromDayThree); // armazenando a data escolhida no estado
+
     } else if(inputValue === 'day-four') {
       console.log('dia 04')
       // pegar a data do 1° dia disponível na API
@@ -166,6 +175,10 @@ function App() {
       const dataFromDayFour = forecast.list.filter((day) => day.dt_txt.split(' ')[0] === fullDateToCompare.split(' ')[0]);
       console.log(`retornando todos os dados do 4° dia ${fullDateToCompare}`); 
       console.log(dataFromDayFour);
+
+      setDayForecast(dataFromDayFour); // armazenando a data escolhida no estado
+
+
     } else if(inputValue === 'day-five') {
       console.log('dia 05')
       // pegar a data do 1° dia disponível na API
@@ -183,12 +196,56 @@ function App() {
       const dataFromDayFive = forecast.list.filter((day) => day.dt_txt.split(' ')[0] === fullDateToCompare.split(' ')[0]);
       console.log(`retornando todos os dados do 5° dia ${fullDateToCompare}`); 
       console.log(dataFromDayFive);
+
+      setDayForecast(dataFromDayFive); // armazenando a data escolhida no estado
+
+
     } 
 
   }
 
   async function handleForecastHour(e, inputValue) {
-    // Pegar a previsão especificamente da hora informada no "range";
+    e.preventDefault()
+    
+    
+
+    // os valores estão ficando desatualizados entre si, verificar este ponto.
+    console.log('Input Value = '); // o input do range button, vem certo 
+    console.log(inputValue);
+
+    //Definir a hora inicial do range para a primeira hora disponível do 1° dia
+    console.log('Day forecast - get 1st available hour for the day = ' + dayForecast[0].dt_txt)
+    const dayAndHourToShow = getDateSplited(dayForecast[0].dt_txt)
+    console.log(dayAndHourToShow.hour); // working
+
+    // TODO TODO TODO Pegar a previsão especificamente da hora informada no "range"; TODO TODO TODO TODO TODO TODO
+    console.log('Hora selecionada = ');
+    console.log(hourForecast); // o valor do state quando mudo ele pega o valor anterior e não o atual, diferente do inputValue
+
+    // pegar os dados(horas) do dia atualmente selecionado
+      //  Pegar a previsão especificamente da hora informada no "range"; Fazer usando o input por hora já que este ainda funciona
+      if(inputValue.length === 1) { // se tiver apenas um número preciso colocar o 0 na frente da hora pra fazer a comparação
+        dayAndHourToShow.hour = '0' + inputValue; // works
+      } else {
+
+        dayAndHourToShow.hour = inputValue; // works
+      }
+
+    // pegar a hora do dia especificado antes no state
+
+    // comparar com a hora selecionada no input
+      // juntando os dados de hora selecionada com o restante para comparar com a previsão a ser exibida = OK, it's working
+      const fullDateToCompare = `${dayAndHourToShow.year}-${dayAndHourToShow.month}-${dayAndHourToShow.day} ${dayAndHourToShow.hour}:${dayAndHourToShow.minutes}:${dayAndHourToShow.seconds}`
+      
+    // retornar o array de informações do dia e hora selecionados no input range
+      // Lógica = filtre para cada dia, o campo hora do dt_txt seja igual o hora informado via rangeinput, separando hora pelo espaço
+      // console.log(`Comparação 1 (state) ${dayForecast[0].dt_txt.split(' ')[1]}`);
+      // console.log(`Comparação 2 (input) ${fullDateToCompare.split(' ')[1]}`);
+    const forecastForTheHourSelected = dayForecast.filter((day) => day.dt_txt.split(' ')[1] === fullDateToCompare.split(' ')[1])
+    
+    console.log('state -> hour forecast');
+    setHourForecast(forecastForTheHourSelected);
+    console.log(forecastForTheHourSelected)
   }
 
   return (
@@ -265,7 +322,7 @@ function App() {
             <span>{forecast ? forecast.city.name : ''}</span>
           </div>
 
-          <form action="" calssName="forecast">
+          <form action="" className="forecast">
             <div className="forecast-days">
               {/* Day One = Tomorrow */}
               <input type="radio" name="day" id="day-one" value={'day-one'} onInput={(event) => {handleForecastDay(event, event.target.value)}}/>
@@ -276,10 +333,43 @@ function App() {
             </div>
           </form>
           
-          <form action="" className='forecast-hours'>
-            <input type="range" name="hour-selected" id="hour-selected" min="0" max="24" step="3" defaultValue={0} onChange={(e) => {setHourForecast(e.target.value)}}/> { /* Tem que definir de 3 em 3 com inicio em 0 e maximo em 24*/}
-            <span>{hourForecast ? `${hourForecast}:00` : '00:00'} </span>
+          <form action="" className={dayForecast ? 'forecast-hours' : 'hide'}>
+            <input 
+            type="range" 
+            name="hour-selected" 
+            id="hour-selected" 
+            min={dayForecast ? getDateSplited(dayForecast[0].dt_txt).hour : '00' /** Vendo se já temos um dia selecionado para buscar as horas */}
+            max="21" 
+            step="3" 
+            defaultValue={dayForecast ? getDateSplited(dayForecast[0].dt_txt).hour : '00'} 
+            onChange={(e) => {setHourRangeValue(e.target.value)}}
+            onInput={(e) => {handleForecastHour(e, e.target.value)}} 
+            /> { /* Tem que definir de 3 em 3 com inicio em 0 e maximo em 24*/}
+            <span>{hourRangeValue ? `${hourRangeValue}:00` : '00:00'} </span> 
+            {/* * Inicialmente só mostra 0 por conta do estado anterior, a ajustar */}
+            
           </form>
+
+          <div className="forecast-results">
+            <h2>Dia -- Horário --:-- (preenchimento dinamico)</h2>
+            <div className="forecast-results-weather">
+              <span>00 °C</span>
+              <img src={hourForecast ? `http://openweathermap.org/img/wn/${hourForecast[0].weather[0].icon}@2x.png` : ''} alt="" />
+              <span> Previsão de {`{chuva leve (preenchimento dinâmico, usar description)}`}</span>
+              <span>Chance de chuva: 00% (forecast.pop onde 1 = 100% e 0 = 0%)</span>
+            </div>
+
+            <div className="forecast-results-temperature">
+              <p>Preencher dados abaixo dinâmicamente</p>
+              <span>temp. maxima</span>
+              <span>temp. minima</span>
+              <span>sesação térmica</span>
+              <span>ventos</span>
+              <span>% de nuvem = clouds (vem já em %)</span>
+            </div>
+
+
+          </div>
           
 
           {/* TER QUE POR CAIXA DE SELEÇÃO PARA OS 5 DIAS E PARA AS HORAS DE 3 em 3 horas
