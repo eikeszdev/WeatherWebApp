@@ -5,6 +5,9 @@ import './App.css';
 import axios from 'axios';
 // const env = require('dotenv').config();
 
+//meta tag lib pra acesar a API weather
+// import MetaTags from 'react-meta-tags';
+
 const myApiKey = 'cba5643ae04b2d08e4ff6b1cbc921946'
 
 function App() {
@@ -33,7 +36,7 @@ function App() {
     setIsLoading(true)
     // Carregando a cidade informada, apenas para pegar a lat e long
     let cityRequested = city.toLocaleLowerCase();
-    const response = await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${cityRequested},BR&limit=5&appid=${myApiKey}`);
+    const response = await axios.get(`https://api.openweathermap.org/geo/1.0/direct?q=${cityRequested},BR&limit=5&appid=${myApiKey}`);
     
     // // retirando a lat e long da cidade para fazer a previsão
     const latCity = response.data[0].lat;
@@ -52,7 +55,7 @@ function App() {
     e.preventDefault();
 
     let cityRequested = city.toLocaleLowerCase();
-    const response = await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${cityRequested},BR&limit=5&lang=pt_br&appid=${myApiKey}`);
+    const response = await axios.get(`https://api.openweathermap.org/geo/1.0/direct?q=${cityRequested},BR&limit=5&lang=pt_br&appid=${myApiKey}`);
     // retirando a lat e long da cidade para fazer a previsão
     const latCity = response.data[0].lat;
     const longCity = response.data[0].lon;
@@ -70,7 +73,7 @@ function App() {
     //api request=  http://api.openweathermap.org/data/2.5/air_pollution?lat={lat}&lon={lon}&appid={API key}
     console.log()
     let cityRequested = city.toLocaleLowerCase();
-    const response = await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${cityRequested},BR&limit=5&lang=pt_br&appid=${myApiKey}`);
+    const response = await axios.get(`https://api.openweathermap.org/geo/1.0/direct?q=${cityRequested},BR&limit=5&lang=pt_br&appid=${myApiKey}`);
     // retirando a lat e long da cidade para fazer a previsão
     const latCity = response.data[0].lat;
     const longCity = response.data[0].lon;
