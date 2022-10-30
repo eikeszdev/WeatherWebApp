@@ -518,7 +518,7 @@ function App() {
 
           <div className="result-date">
             <span>{weather ? weather.main.temp : ''} °C</span>
-            <img src={weather ? `http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png` : ''} alt="" />
+            <img src={weather ? `https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png` : ''} alt="" />
           </div>
 
           <div className="result-data">
@@ -577,7 +577,7 @@ function App() {
           <div className={hourForecast ? "forecast-results" : 'hide'}>
             <div className="forecast-results-weather">
               <span className="forecast-results-weather-description">Temp. média do dia: <b>{hourForecast ? `${hourForecast[0].main.temp}°C` : ''}</b></span>
-              <img src={hourForecast ? `http://openweathermap.org/img/wn/${hourForecast[0].weather[0].icon}@2x.png` : ''} alt="" />
+              <img src={hourForecast ? `https://openweathermap.org/img/wn/${hourForecast[0].weather[0].icon}@2x.png` : ''} alt="" />
               <span>Previsão de: <b>{hourForecast ? `${hourForecast[0].weather[0].description}` : ''}</b></span>
               <span>Chance de chuva: <b>{hourForecast ? `${(hourForecast[0].pop * 100)}%` : ''}</b></span>
             </div>
