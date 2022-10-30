@@ -10,6 +10,7 @@ function App() {
 
   const [weather, setWeather] = useState();
   const [forecast, setForecast] = useState();
+  const [airQuality, setAirQuality] = useState();
 
   const [city, setCity] = useState('');
   const [cep, setCep] = useState("");
@@ -18,11 +19,13 @@ function App() {
   const [hourForecast, setHourForecast] = useState();
   const [dayForecast, setDayForecast] = useState();
 
+  const [reloadContent, setReloadContent] = useState(false);
+
 
   useEffect(() => {
     console.log('UseEffect loads')
 
-  }, [weather, forecast, hourForecast, hourRangeValue, , dayForecast])
+  }, [weather, forecast, hourForecast, hourRangeValue, , dayForecast, airQuality])
   
   async function handleLoadWeather(e) {
     e.preventDefault();
@@ -38,6 +41,9 @@ function App() {
     const weatherResponse = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${latCity}&lon=${longCity}&units=metric&appid=${myApiKey}`)
     
     setWeather(weatherResponse.data);
+
+    loadQualityOfAir(); // chamando a função de chamada a API para qualidade do ar
+    
   }
 
   async function handleLoadForecast(e) {
@@ -52,6 +58,49 @@ function App() {
     const forecastResponse = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${latCity}&lon=${longCity}&units=metric&lang=pt_br&appid=${myApiKey}`)
     console.log(forecastResponse.data);
     setForecast(forecastResponse.data);
+  }
+
+  async function loadQualityOfAir() {
+    // a desenvolver
+    https://openweathermap.org/api/air-pollution
+    //api request=  http://api.openweathermap.org/data/2.5/air_pollution?lat={lat}&lon={lon}&appid={API key}
+    console.log()
+    let cityRequested = city.toLocaleLowerCase();
+    const response = await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${cityRequested},BR&limit=5&lang=pt_br&appid=${myApiKey}`);
+    // retirando a lat e long da cidade para fazer a previsão
+    const latCity = response.data[0].lat;
+    const longCity = response.data[0].lon;
+    // Chamando a API de previsão para os próximos 5 dias, os dados se atualizam estão dividos de 3 em 3 horas
+    const airQualityResponse = await axios.get(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${latCity}&lon=${longCity}&appid=${myApiKey}`)
+    console.log('Qualidade do ar: ')
+    console.log(airQualityResponse.data);
+    console.log('Qualidade do valor avaliação: ')
+    console.log(airQualityResponse.data.list[0].main.aqi); // retorna de 1 a 5, onde: 1 = good, 2 = fair, 3 = moderate, 4 = poor, 5 = very poor.
+
+    let qualityOfAirReturned = ''
+
+    if(airQualityResponse.data.list[0].main.aqi === 1) { // AIR QUALITY GOOD
+      qualityOfAirReturned = 'Ótima';
+      console.log('Qualidade do ar é: ');
+    } else if(airQualityResponse.data.list[0].main.aqi === 2) {  // AIR QUALITY FAIR
+      qualityOfAirReturned = 'Boa';
+      console.log('Qualidade do ar é: ');
+    } else if(airQualityResponse.data.list[0].main.aqi === 3) { // AIR QUALITY MODERATE
+      qualityOfAirReturned = 'Mediana';
+      console.log('Qualidade do ar é: ');
+    } else if(airQualityResponse.data.list[0].main.aqi === 4) { // AIR QUALITY POOR
+      qualityOfAirReturned = 'Ruim';
+      console.log('Qualidade do ar é: ');
+    } else if(airQualityResponse.data.list[0].main.aqi === 5) { // VERY POOR
+      qualityOfAirReturned = 'Péssima';
+      console.log('Qualidade do ar é: ');
+    } else {
+      // salvar no estado como "Não disponível"
+      qualityOfAirReturned = 'Indisponível'
+      console.log('Qualidade do ar é: ');
+    }
+    // console.log(qualityOfAirReturned);
+    setAirQuality(qualityOfAirReturned); 
   }
 
   function getDateSplited(dateAsString) {
@@ -146,6 +195,8 @@ function App() {
       const dataFromDayOne = forecast.list.filter((day) => day.dt_txt.split(' ')[0] === fullDateToCompare.split(' ')[0]);
       console.log(`retornando todos os dados do 1° dia ${fullDateToCompare}`); 
       console.log(dataFromDayOne);
+      console.log('forecast list: ')
+      console.log(forecast.list)
       setDayForecast(dataFromDayOne); // armazenando a data escolhida no estado
       
 
@@ -203,7 +254,6 @@ function App() {
       console.log(dataFromDayTwo);
       // working
       setDayForecast(dataFromDayTwo); // armazenando a data escolhida no estado
-
 
       console.log('################# dia 02 #################')
 
@@ -364,7 +414,6 @@ function App() {
       console.log('################# dia 05 #################')
 
     } 
-
   }
 
   async function handleForecastHour(e, inputValue) {
@@ -407,7 +456,10 @@ function App() {
     console.log('state -> hour forecast');
     setHourForecast(forecastForTheHourSelected);
     console.log(forecastForTheHourSelected)
+    setHourRangeValue(parseInt(inputValue));
   }
+
+
 
 
 
@@ -457,7 +509,7 @@ function App() {
         <section className={weather ? `result` : 'hide'}>
 
             <span> Clima Atual</span>
-            <p>A adicionar previsão dos 5 dias</p>
+            <p>Qualidade do ar: {airQuality}</p>
           <div className="result-title">
             <img src={weather ? `https://countryflagsapi.com/png/${weather.sys.country}` : ''} alt="Bandeira do Brasil" />
             <span>{weather ? weather.name : ''}</span>
@@ -479,7 +531,6 @@ function App() {
         <section className={forecast ? `result` : 'hide'}>
 
             <span> Previsão para os próximos dias</span>
-            <p>A adicionar previsão dos 5 dias</p>
           <div className="result-title">
             <img src={forecast ? `https://countryflagsapi.com/png/${forecast.city.country}` : ''} alt="Bandeira do Brasil" />
             <span>{forecast ? forecast.city.name : ''}</span>
@@ -513,7 +564,7 @@ function App() {
             defaultValue={dayForecast ? getDateSplited(dayForecast[0].dt_txt).hour : '00'} 
             onChange={(e) => {setHourRangeValue(e.target.value)}}
             onInput={(e) => {handleForecastHour(e, e.target.value)}} 
-            onLoad={(e) => {handleForecastHour(e, e.target.value)}}
+            // onLoad={(e) => {handleForecastHour(e, e.target.value)}}
             /> { /* Tem que definir de 3 em 3 com inicio em 0 e maximo em 24*/}
             <span>{hourRangeValue ? `Horário: ${hourRangeValue}:00` : '00:00'} </span> 
             {/* * Inicialmente só mostra 0 por conta do estado anterior, a ajustar */}
