@@ -10,8 +10,7 @@ function App() {
 
   const [weather, setWeather] = useState();
   const [forecast, setForecast] = useState();
-  // const [cityResponse, setCityResponse] = useState();
-  /// só preciso da req de previsão que já tem a cidade
+
   const [city, setCity] = useState('');
   const [cep, setCep] = useState("");
   const [hourRangeValue, setHourRangeValue] = useState(null);
@@ -21,10 +20,7 @@ function App() {
 
 
   useEffect(() => {
-    // console.log(weather); 
     console.log('UseEffect loads')
-    // console.log('Date State: '); // working
-    // console.log(dayForecast)
 
   }, [weather, forecast, hourForecast, hourRangeValue, , dayForecast])
   
@@ -34,18 +30,14 @@ function App() {
     // Carregando a cidade informada, apenas para pegar a lat e long
     let cityRequested = city.toLocaleLowerCase();
     const response = await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${cityRequested},BR&limit=5&appid=${myApiKey}`);
-    // console.log(response.data)
-    // console.log(`Resposta a respeito da cidade = ${response.data}` );
-    // setCityResponse(response.data);
-    // console.log(`cityResponse`)
+    
     // // retirando a lat e long da cidade para fazer a previsão
     const latCity = response.data[0].lat;
     const longCity = response.data[0].lon;
     // requisição da previsão do tempo para a cidade informada
     const weatherResponse = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${latCity}&lon=${longCity}&units=metric&appid=${myApiKey}`)
-    console.log(weatherResponse.data)
+    
     setWeather(weatherResponse.data);
-    // console.log('Resposta a respeito da previsão para a cidade = ' + forecastResponse);
   }
 
   async function handleLoadForecast(e) {
@@ -409,9 +401,7 @@ function App() {
       const fullDateToCompare = `${dayAndHourToShow.year}-${dayAndHourToShow.month}-${dayAndHourToShow.day} ${dayAndHourToShow.hour}:${dayAndHourToShow.minutes}:${dayAndHourToShow.seconds}`
       
     // retornar o array de informações do dia e hora selecionados no input range
-      // Lógica = filtre para cada dia, o campo hora do dt_txt seja igual o hora informado via rangeinput, separando hora pelo espaço
-      // console.log(`Comparação 1 (state) ${dayForecast[0].dt_txt.split(' ')[1]}`);
-      // console.log(`Comparação 2 (input) ${fullDateToCompare.split(' ')[1]}`);
+      // Lógica = filtro para cada dia, o campo hora do dt_txt seja igual o hora informado via rangeinput, separando hora pelo espaço
     const forecastForTheHourSelected = dayForecast.filter((day) => day.dt_txt.split(' ')[1] === fullDateToCompare.split(' ')[1])
     
     console.log('state -> hour forecast');
