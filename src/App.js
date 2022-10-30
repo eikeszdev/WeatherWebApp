@@ -22,8 +22,6 @@ function App() {
   const [hourForecast, setHourForecast] = useState();
   const [dayForecast, setDayForecast] = useState();
 
-  const [reloadContent, setReloadContent] = useState(false);
-
 
   useEffect(() => {
     console.log('UseEffect loads')
@@ -510,7 +508,6 @@ function App() {
         <section className={weather ? `result` : 'hide'}>
 
             <span> Clima Atual</span>
-            <p>A adicionar previsão dos 5 dias</p>
           <div className="result-title">
             <img src={weather ? `https://countryflagsapi.com/png/${weather.sys.country}` : ''} alt="Bandeira do Brasil" />
             <span>{weather ? weather.name : ''}</span>
@@ -525,7 +522,7 @@ function App() {
             <span>Chuva: <b>7%</b></span>
             <span>Umidade: <b>{weather ? weather.main.humidity : ''}%</b></span>
             <span>Vento: <b>{weather ? weather.wind.speed : ''}Km/h</b></span>
-            <span>Qualidade do ar: <b>7%</b></span>
+            <span>Qualidade do ar: <b>{airQuality ? airQuality : 'indisponível'}</b></span>
           </div>
 
         </section>
