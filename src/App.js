@@ -1,12 +1,15 @@
-import './App.css';
+// eslint-disable-next-line
 // import apiWeather from './services/weatherApi';
 import React, {useEffect, useState} from 'react';
+import './App.css';
 import axios from 'axios';
-const env = require('dotenv').config();
+// const env = require('dotenv').config();
 
 const myApiKey = 'cba5643ae04b2d08e4ff6b1cbc921946'
 
 function App() {
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const [weather, setWeather] = useState();
   const [forecast, setForecast] = useState();
@@ -26,7 +29,7 @@ function App() {
   
   async function handleLoadWeather(e) {
     e.preventDefault();
-
+    setIsLoading(true)
     // Carregando a cidade informada, apenas para pegar a lat e long
     let cityRequested = city.toLocaleLowerCase();
     const response = await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${cityRequested},BR&limit=5&appid=${myApiKey}`);
@@ -38,6 +41,7 @@ function App() {
     const weatherResponse = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${latCity}&lon=${longCity}&units=metric&appid=${myApiKey}`)
     
     setWeather(weatherResponse.data);
+    setIsLoading(false)
   }
 
   async function handleLoadForecast(e) {
@@ -50,7 +54,9 @@ function App() {
     const longCity = response.data[0].lon;
     // Chamando a API de previsão para os próximos 5 dias, os dados se atualizam estão dividos de 3 em 3 horas
     const forecastResponse = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${latCity}&lon=${longCity}&units=metric&lang=pt_br&appid=${myApiKey}`)
-    console.log(forecastResponse.data);
+    console.log(forecastResponse.data.list);
+    // const dias = forecastResponse.data.list.slice(0, 5)
+    // console.log(dias)
     setForecast(forecastResponse.data);
   }
 
@@ -413,20 +419,12 @@ function App() {
 
   return (
     <div id="App">
-      
-
       <main className="Content">
-        <div className="Header">
-          <span> Voltar </span>
-          <img src='location.png' className="Logo"></img>
-        </div>
-
-        <h1 className="title">Weather Web App</h1>~
-
+        <h1 className="title">Weather Web App</h1>
         <form action=''>
           <h3 className="subtitle">Insira sua cidade ou CEP</h3>
 
-          <div className='input-block'>
+          <div className="input-block">
             <label htmlFor=''>CIDADE: </label>
             <input 
             type="text"
@@ -449,15 +447,17 @@ function App() {
             onChange={e => setCep(e.target.value)} />
           </div>
 
-          <button className="form-button" onClick={(e) => handleLoadWeather(e)}>Consultar clima atual</button>
-          <button className="form-button" onClick={(e) => handleLoadForecast(e)}>Previsão do tempo</button> {/*<!-tirar o submit do forms ativando a função de chamada a API e colocar através do botão--> */}
-
+          <div className='containerBtn'>
+            <button className="form-button" onClick={(e) => handleLoadWeather(e)}>
+              Consultar clima atual
+            </button>
+            <button className="form-button" onClick={(e) => handleLoadForecast(e)}>Previsão do tempo</button> {/*<!-tirar o submit do forms ativando a função de chamada a API e colocar através do botão--> */}
+          </div>
         </form>
 
         <section className={weather ? `result` : 'hide'}>
 
             <span> Clima Atual</span>
-            <p>A adicionar previsão dos 5 dias</p>
           <div className="result-title">
             <img src={weather ? `https://countryflagsapi.com/png/${weather.sys.country}` : ''} alt="Bandeira do Brasil" />
             <span>{weather ? weather.name : ''}</span>
@@ -472,20 +472,20 @@ function App() {
             <span>Chuva: <b>7%</b></span>
             <span>Umidade: <b>{weather ? weather.main.humidity : ''}%</b></span>
             <span>Vento: <b>{weather ? weather.wind.speed : ''}Km/h</b></span>
+            <span>Qualidade do ar: <b>7%</b></span>
           </div>
 
         </section>
 
-        <section className={forecast ? `result` : 'hide'}>
+        <section className={forecast ? `result-prevision` : 'hide'}>
 
             <span> Previsão para os próximos dias</span>
-            <p>A adicionar previsão dos 5 dias</p>
           <div className="result-title">
             <img src={forecast ? `https://countryflagsapi.com/png/${forecast.city.country}` : ''} alt="Bandeira do Brasil" />
             <span>{forecast ? forecast.city.name : ''}</span>
           </div>
 
-          <form action="" className="forecast">
+          <form action="" className="forecast"> 
             <div className="forecast-days">
               {/* Day One = Tomorrow */}
               <input type="radio" name="day" id="day-one" value={'day-one'} onInput={(event) => {handleForecastDay(event, event.target.value)}}/>
@@ -515,7 +515,7 @@ function App() {
             onInput={(e) => {handleForecastHour(e, e.target.value)}} 
             onLoad={(e) => {handleForecastHour(e, e.target.value)}}
             /> { /* Tem que definir de 3 em 3 com inicio em 0 e maximo em 24*/}
-            <span>{hourRangeValue ? `Horário: ${hourRangeValue}:00` : '00:00'} </span> 
+            <span>Horário: {hourRangeValue ? `${hourRangeValue}:00` : '00:00'} </span> 
             {/* * Inicialmente só mostra 0 por conta do estado anterior, a ajustar */}
             
           </form>
@@ -524,17 +524,17 @@ function App() {
             <div className="forecast-results-weather">
               <span className="forecast-results-weather-description">Temp. média do dia: <b>{hourForecast ? `${hourForecast[0].main.temp}°C` : ''}</b></span>
               <img src={hourForecast ? `http://openweathermap.org/img/wn/${hourForecast[0].weather[0].icon}@2x.png` : ''} alt="" />
-              <span> {hourForecast ? `Previsão de: ${hourForecast[0].weather[0].description}` : ''}</span>
-              <span>{hourForecast ? `Chance de chuva: ${(hourForecast[0].pop * 100)}%` : ''}</span>
+              <span>Previsão de: <b>{hourForecast ? `${hourForecast[0].weather[0].description}` : ''}</b></span>
+              <span>Chance de chuva: <b>{hourForecast ? `${(hourForecast[0].pop * 100)}%` : ''}</b></span>
             </div>
 
             <div className="forecast-results-temperature">
               <h4>Mais informações:</h4>
-              <span>{hourForecast ? `temp. maxima: ${hourForecast[0].main.temp_max}°C` : ''}</span>
-              <span>{hourForecast ? `temp. mínima: ${hourForecast[0].main.temp_min}°C` : ''}</span>
-              <span>{hourForecast ? `Sensação térmica: ${hourForecast[0].main.feels_like}°C` : ''}</span>
-              <span>{hourForecast ? `Ventos: ${hourForecast[0].wind.speed}Km/h` : ''}</span>
-              <span>{hourForecast ? `Presença de nuvens: ${hourForecast[0].clouds.all}%` : ''}</span>
+              <span>Temp. máxima: <b>{hourForecast ? `${hourForecast[0].main.temp_max}°C` : ''}</b></span>
+              <span>Temp. mínima: <b>{hourForecast ? `${hourForecast[0].main.temp_min}°C` : ''}</b></span>
+              <span>Sensação térmica: <b>{hourForecast ? `${hourForecast[0].main.feels_like}°C` : ''}</b></span>
+              <span>Ventos: <b>{hourForecast ? `${hourForecast[0].wind.speed}Km/h` : ''}</b></span>
+              <span>Presença de nuvens: <b>{hourForecast ? `${hourForecast[0].clouds.all}%` : ''}</b></span>
             </div>
 
 
