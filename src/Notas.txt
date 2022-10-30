@@ -50,3 +50,28 @@ SE HOUVER O DADO DE X CIDADE NÃO CHAMAR A API NOVAMENTE
  array 39 -> descartavel
 
  ----- TODO -> Melhorar par apuxar pelo texto de data mesmo ao invés de array
+
+ if(dateFromTheDay.month === '01' || dateFromTheDay.month === '03' || dateFromTheDay.month === '05'|| 
+      dateFromTheDay.month === '07' || dateFromTheDay.month === '08' || dateFromTheDay.month === '10' || 
+      dateFromTheDay.month === '12' ) {
+        
+        if(dateFromTheDay === 31) { // vendo se é 31, se for vai pra 1
+          dayUpdated = 1
+        } else {
+          dayUpdated = parseInt(dateFromTheDay.day) + 1; // se não coloco 1
+        }
+
+      } else if (dateFromTheDay.month === '04' || dateFromTheDay.month === '06' || 
+      dateFromTheDay.month === '09' || dateFromTheDay.month === '11') {
+        if(dateFromTheDay === 30) {
+          dayUpdated = 1
+        } else {
+          dayUpdated = parseInt(dateFromTheDay.day) + 1;
+        }
+      } else { // caso de fevereiro
+        if(dateFromTheDay === 28) {
+          dayUpdated = 1
+        } else {
+          dayUpdated = parseInt(dateFromTheDay.day) + 1;
+        }
+      }

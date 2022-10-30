@@ -1,10 +1,10 @@
 import './App.css';
 // import apiWeather from './services/weatherApi';
-import react, {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
+const env = require('dotenv').config();
 
-const myApiKey = 'cba5643ae04b2d08e4ff6b1cbc921946';
-const loc = 'Santos'
+const myApiKey = 'cba5643ae04b2d08e4ff6b1cbc921946'
 
 function App() {
 
@@ -19,12 +19,14 @@ function App() {
   const [hourForecast, setHourForecast] = useState();
   const [dayForecast, setDayForecast] = useState();
 
+
   useEffect(() => {
     // console.log(weather); 
     console.log('UseEffect loads')
     // console.log('Date State: '); // working
     // console.log(dayForecast)
-  }, [weather, forecast, hourForecast, hourRangeValue])
+
+  }, [weather, forecast, hourForecast, hourRangeValue, , dayForecast])
   
   async function handleLoadWeather(e) {
     e.preventDefault();
@@ -92,7 +94,43 @@ function App() {
     return finalSplitedDate
   }
 
+  function lastDayOfMonth(dateObject, dayBasedOnTheFirst) {
+    console.log('Day based on the first one + x number')
+    console.log(dayBasedOnTheFirst); // recebe o dia com a somatória de quantos dias é depois do inicial, se estourar o máximo em um mês retorna pra 1
+    const dateFromTheDay = dateObject;
+      // tratando problemas quando a data for 31 ou 30, pra voltar pra 1
+      // meses com 31 dias
+      if(dateFromTheDay.month === '01' || dateFromTheDay.month === '03' || dateFromTheDay.month === '05'|| 
+      dateFromTheDay.month === '07' || dateFromTheDay.month === '08' || dateFromTheDay.month === '10' || 
+      dateFromTheDay.month === '12' ) {
+        
+        if(dayBasedOnTheFirst >= 32) { // vendo se o próximo número da data é 31, se for vai pra 1
+          return true
+        } else {
+          return false
+          // dayUpdated = parseInt(dateFromTheDay.day) + 1; // se não coloco 1
+        }
+
+      } else if (dateFromTheDay.month === '04' || dateFromTheDay.month === '06' || 
+      dateFromTheDay.month === '09' || dateFromTheDay.month === '11') {
+        if(dayBasedOnTheFirst >= 31) {
+          return true
+        } else {
+          return false
+        }
+      } else { // caso de fevereiro
+        if(dayBasedOnTheFirst >= 28 || dayBasedOnTheFirst >= 29) {
+          return true
+        } else {
+          return false
+        }
+      }
+  }
+
+
   async function handleForecastDay(e, inputValue) {
+    console.log('################# dia 01 #################')
+
     e.preventDefault();
     
     // Colocando o dayOne por fora pra eu usar o objeto que retorna como base para os outros dias.
@@ -117,19 +155,54 @@ function App() {
       console.log(`retornando todos os dados do 1° dia ${fullDateToCompare}`); 
       console.log(dataFromDayOne);
       setDayForecast(dataFromDayOne); // armazenando a data escolhida no estado
+      
+
+    console.log('################# dia 01 #################')
+
 
     } else if(inputValue === 'day-two') {
       //testando mesma função do dia 01 agora para o 2° dia
-      console.log('dia 02')
+      console.log('################# dia 02 #################')
       // pegar a data do 1° dia disponível na API
       // converter para int o dia do object e adicionar +1 no dia para pegar do dia seguinte
       const dateFromTheDay = dateFromDayOne;
-      const dayUpdated = parseInt(dateFromTheDay.day) + 1;
-      // console.log(dayUpdated + ''); // convertendo pra string com o {+''}
+      console.log('DateFromTheDay dia 02')
+      console.log(dateFromTheDay)
+      // tratando problemas quando a data for 31 ou 30, pra voltar pra 1
+      let dayUpdated = 0;
+      let monthUpdate = 0; // para saber se atualizo o mes ou não, já que se o dia mudar pra 1 o mês muda também
+      
+      console.log(lastDayOfMonth(dateFromTheDay, (parseInt(dateFromTheDay.day) + 1)) );
+      if(lastDayOfMonth(dateFromTheDay) === true){
+        dayUpdated = 1; // atualizando para o primeiro dia do mês
+        if(dateFromTheDay.month !== '12') { // se não for dezembro, só acrescenta 1
+          monthUpdate = parseInt(dateFromTheDay.month) + 1;
+          if(monthUpdate > 0 && monthUpdate < 10) { // vendo se é mês de caracter unico pra adicionar o 0
+            dateFromTheDay.month = '0'+monthUpdate;
+          } else {
+            dateFromTheDay.month = monthUpdate+'';
+          }
+        } else { // se for dezembro vai pro mês 01
+          dateFromTheDay.month = '01';
+        }
+      } else {
+        console.log('O primeiro dia disponível não é o último')
+        dayUpdated = parseInt(dateFromTheDay.day) + 1; // atualizando o dia
+      }
+      
+      
+      console.log(dayUpdated + ''); // convertendo pra string com o {+''}
 
       // converter de volta para string e reamarzenar no objeto
-      dateFromTheDay.day = dayUpdated + '';
+      
+      if(dayUpdated > 0 && dayUpdated < 10) {//vendo se o número é menor que 10 pra acrescentar o 0
+        dateFromTheDay.day = '0' + dayUpdated ;
+      } else {
+        dateFromTheDay.day = dayUpdated + '';
+      }
+      console.log('Date from the day')
       console.log(dateFromTheDay)
+      
 
       // retornar todos os dados que batem com esse 2° dia
       const fullDateToCompare = `${dateFromTheDay.year}-${dateFromTheDay.month}-${dateFromTheDay.day} ${dateFromTheDay.hour}:${dateFromTheDay.minutes}:${dateFromTheDay.seconds}`
@@ -138,16 +211,56 @@ function App() {
       console.log(dataFromDayTwo);
       // working
       setDayForecast(dataFromDayTwo); // armazenando a data escolhida no estado
+
+
+      console.log('################# dia 02 #################')
+
     } else if(inputValue === 'day-three') {
-      console.log('dia 03')
+      console.log('################# dia 03 #################')
       // pegar a data do 1° dia disponível na API
       // converter para int o dia do object e adicionar +1 no dia para pegar do dia seguinte
       const dateFromTheDay = dateFromDayOne;
-      const dayUpdated = parseInt(dateFromTheDay.day) + 2;
+      // tratando problemas quando a data for 31 ou 30, pra voltar pra 1
+      let dayUpdated = 0;
+      let monthUpdate = 0; // para saber se atualizo o mes ou não, já que se o dia mudar pra 1 o mês muda também
+      
+      // fazer por conta mesmo já que se eu nunca passar pelo 2° dia o estado não vai existir
+      // console.log('Resultado do estado do dia 02');
+      // console.log(forecastDayTwo);
+      console.log('Data inicial = ');
+      console.log(dateFromTheDay);
+
+      if(lastDayOfMonth(dateFromTheDay, (parseInt(dateFromTheDay.day) + 2)) === true){
+        console.log('O próximo dia disponível é o ultimo dia do mês')
+        dayUpdated = 1; // atualizando para o primeiro dia do mês +2 por ser o 3° dia, o Else que ta umas 10 linhas abaixos não vai rodar pq é ultimo dia do mês
+        if(dateFromTheDay.month !== '12') { // se não for dezembro, só acrescenta 1
+          monthUpdate = parseInt(dateFromTheDay.month) + 1;
+          if(monthUpdate > 0 && monthUpdate < 10) { // vendo se é mês de caracter unico pra adicionar o 0
+            dateFromTheDay.month = '0'+monthUpdate;
+          }
+          dateFromTheDay.month = monthUpdate+'';
+        } else { // se for dezembro vai pro mês 01
+          console.log(' O próximo dia disponível Não é o ultimo dia do mês')
+          dateFromTheDay.month = '01';
+        }
+      } else {
+        dayUpdated = parseInt(dateFromTheDay.day) + 2; // atualizando o dia
+        console.log('day 3 dayUpdated - ')
+        console.log(dayUpdated)
+      }
+      
+      
       // console.log(dayUpdated + ''); // convertendo pra string com o {+''}
 
       // converter de volta para string e reamarzenar no objeto
-      dateFromTheDay.day = dayUpdated + '';
+      // converter de volta para string e reamarzenar no objeto
+      
+      if(dayUpdated > 0 && dayUpdated < 10) {//vendo se o número é menor que 10 pra acrescentar o 0
+        dateFromTheDay.day = '0' + dayUpdated ;
+      } else {
+        dateFromTheDay.day = dayUpdated + '';
+      }
+      console.log('Date from the day')
       console.log(dateFromTheDay)
 
       // retornar todos os dados que batem com esse 2° dia
@@ -158,16 +271,45 @@ function App() {
 
       setDayForecast(dataFromDayThree); // armazenando a data escolhida no estado
 
-    } else if(inputValue === 'day-four') {
-      console.log('dia 04')
+      console.log('################# dia 03 #################')
+
+    } else if(inputValue === 'day-four') { // +3
+      console.log('################# dia 04 #################')
       // pegar a data do 1° dia disponível na API
       // converter para int o dia do object e adicionar +1 no dia para pegar do dia seguinte
       const dateFromTheDay = dateFromDayOne;
-      const dayUpdated = parseInt(dateFromTheDay.day) + 3;
+      // tratando problemas quando a data for 31 ou 30, pra voltar pra 1
+      let dayUpdated = 0;
+      let monthUpdate = 0; // para saber se atualizo o mes ou não, já que se o dia mudar pra 1 o mês muda também
+      
+      
+      if(lastDayOfMonth(dateFromTheDay, (parseInt(dateFromTheDay.day) + 3)) === true){
+        dayUpdated = 1 + 1; // atualizando para o primeiro dia do mês
+        if(dateFromTheDay.month !== '12') { // se não for dezembro, só acrescenta 1
+          monthUpdate = parseInt(dateFromTheDay.month) + 1;
+          if(monthUpdate > 0 && monthUpdate < 10) { // vendo se é mês de caracter unico pra adicionar o 0
+            dateFromTheDay.month = '0'+monthUpdate;
+          }
+          dateFromTheDay.month = monthUpdate+'';
+        } else { // se for dezembro vai pro mês 01
+          dateFromTheDay.month = '01';
+        }
+      } else {
+        dayUpdated = parseInt(dateFromTheDay.day) + 3; // atualizando o dia
+      }
+      
+      
       // console.log(dayUpdated + ''); // convertendo pra string com o {+''}
 
       // converter de volta para string e reamarzenar no objeto
-      dateFromTheDay.day = dayUpdated + '';
+      // converter de volta para string e reamarzenar no objeto
+      
+      if(dayUpdated > 0 && dayUpdated < 10) {//vendo se o número é menor que 10 pra acrescentar o 0
+        dateFromTheDay.day = '0' + dayUpdated ;
+      } else {
+        dateFromTheDay.day = dayUpdated + '';
+      }
+      console.log('Date from the day')
       console.log(dateFromTheDay)
 
       // retornar todos os dados que batem com esse 2° dia
@@ -178,17 +320,45 @@ function App() {
 
       setDayForecast(dataFromDayFour); // armazenando a data escolhida no estado
 
+      console.log('################# dia 04 #################')
 
-    } else if(inputValue === 'day-five') {
-      console.log('dia 05')
+    } else if(inputValue === 'day-five') { // +4
+      console.log('################# dia 05 #################')
       // pegar a data do 1° dia disponível na API
       // converter para int o dia do object e adicionar +1 no dia para pegar do dia seguinte
       const dateFromTheDay = dateFromDayOne;
-      const dayUpdated = parseInt(dateFromTheDay.day) + 4;
+      // tratando problemas quando a data for 31 ou 30, pra voltar pra 1
+      let dayUpdated = 0;
+      let monthUpdate = 0; // para saber se atualizo o mes ou não, já que se o dia mudar pra 1 o mês muda também
+      
+      
+      if(lastDayOfMonth(dateFromTheDay, (parseInt(dateFromTheDay.day) + 4)) === true){
+        dayUpdated = 1 + 2; // atualizando para o primeiro dia do mês
+        if(dateFromTheDay.month !== '12') { // se não for dezembro, só acrescenta 1
+          monthUpdate = parseInt(dateFromTheDay.month) + 1;
+          if(monthUpdate > 0 && monthUpdate < 10) { // vendo se é mês de caracter unico pra adicionar o 0
+            dateFromTheDay.month = '0'+monthUpdate;
+          }
+          dateFromTheDay.month = monthUpdate+'';
+        } else { // se for dezembro vai pro mês 01
+          dateFromTheDay.month = '01';
+        }
+      } else {
+        dayUpdated = parseInt(dateFromTheDay.day) + 4; // atualizando o dia
+      }
+      
+      
       // console.log(dayUpdated + ''); // convertendo pra string com o {+''}
 
       // converter de volta para string e reamarzenar no objeto
-      dateFromTheDay.day = dayUpdated + '';
+      // converter de volta para string e reamarzenar no objeto
+      
+      if(dayUpdated > 0 && dayUpdated < 10) {//vendo se o número é menor que 10 pra acrescentar o 0
+        dateFromTheDay.day = '0' + dayUpdated ;
+      } else {
+        dateFromTheDay.day = dayUpdated + '';
+      }
+      console.log('Date from the day')
       console.log(dateFromTheDay)
 
       // retornar todos os dados que batem com esse 2° dia
@@ -199,6 +369,7 @@ function App() {
 
       setDayForecast(dataFromDayFive); // armazenando a data escolhida no estado
 
+      console.log('################# dia 05 #################')
 
     } 
 
@@ -248,6 +419,8 @@ function App() {
     console.log(forecastForTheHourSelected)
   }
 
+
+
   return (
     <div id="App">
       
@@ -275,7 +448,7 @@ function App() {
             onChange={e => setCity(e.target.value)} />
           </div>
 
-          <div className='input-block'>
+          <div className='input-block hide'>
             <label htmlFor=''>CEP: </label>
             <input 
             type="number"
@@ -330,6 +503,12 @@ function App() {
               <input type="radio" name="day" id="day-three" value={'day-three'} onInput={(event) => {handleForecastDay(event, event.target.value)}}/>
               <input type="radio" name="day" id="day-four" value={'day-four'} onInput={(event) => {handleForecastDay(event, event.target.value)}}/>
               <input type="radio" name="day" id="day-five" value={'day-five'} onInput={(event) => {handleForecastDay(event, event.target.value)}}/>
+              {/* Texto que irá para cada uma das opções */}
+              <label htmlFor="day-one" className="option day-one"><span>Dia 01</span></label>
+              <label htmlFor="day-two" className="option day-two"><span>Dia 02</span></label>
+              <label htmlFor="day-three" className="option day-three"><span>Dia 03</span></label>
+              <label htmlFor="day-four" className="option day-four"><span>Dia 04</span></label>
+              <label htmlFor="day-five" className="option day-five"><span>Dia 05</span></label>
             </div>
           </form>
           
@@ -344,47 +523,32 @@ function App() {
             defaultValue={dayForecast ? getDateSplited(dayForecast[0].dt_txt).hour : '00'} 
             onChange={(e) => {setHourRangeValue(e.target.value)}}
             onInput={(e) => {handleForecastHour(e, e.target.value)}} 
+            onLoad={(e) => {handleForecastHour(e, e.target.value)}}
             /> { /* Tem que definir de 3 em 3 com inicio em 0 e maximo em 24*/}
-            <span>{hourRangeValue ? `${hourRangeValue}:00` : '00:00'} </span> 
+            <span>{hourRangeValue ? `Horário: ${hourRangeValue}:00` : '00:00'} </span> 
             {/* * Inicialmente só mostra 0 por conta do estado anterior, a ajustar */}
             
           </form>
 
-          <div className="forecast-results">
-            <h2>Dia -- Horário --:-- (preenchimento dinamico)</h2>
+          <div className={hourForecast ? "forecast-results" : 'hide'}>
             <div className="forecast-results-weather">
-              <span>00 °C</span>
+              <span className="forecast-results-weather-description">Temp. média do dia: <b>{hourForecast ? `${hourForecast[0].main.temp}°C` : ''}</b></span>
               <img src={hourForecast ? `http://openweathermap.org/img/wn/${hourForecast[0].weather[0].icon}@2x.png` : ''} alt="" />
-              <span> Previsão de {`{chuva leve (preenchimento dinâmico, usar description)}`}</span>
-              <span>Chance de chuva: 00% (forecast.pop onde 1 = 100% e 0 = 0%)</span>
+              <span> {hourForecast ? `Previsão de: ${hourForecast[0].weather[0].description}` : ''}</span>
+              <span>{hourForecast ? `Chance de chuva: ${(hourForecast[0].pop * 100)}%` : ''}</span>
             </div>
 
             <div className="forecast-results-temperature">
-              <p>Preencher dados abaixo dinâmicamente</p>
-              <span>temp. maxima</span>
-              <span>temp. minima</span>
-              <span>sesação térmica</span>
-              <span>ventos</span>
-              <span>% de nuvem = clouds (vem já em %)</span>
+              <h4>Mais informações:</h4>
+              <span>{hourForecast ? `temp. maxima: ${hourForecast[0].main.temp_max}°C` : ''}</span>
+              <span>{hourForecast ? `temp. mínima: ${hourForecast[0].main.temp_min}°C` : ''}</span>
+              <span>{hourForecast ? `Sensação térmica: ${hourForecast[0].main.feels_like}°C` : ''}</span>
+              <span>{hourForecast ? `Ventos: ${hourForecast[0].wind.speed}Km/h` : ''}</span>
+              <span>{hourForecast ? `Presença de nuvens: ${hourForecast[0].clouds.all}%` : ''}</span>
             </div>
 
 
           </div>
-          
-
-          {/* TER QUE POR CAIXA DE SELEÇÃO PARA OS 5 DIAS E PARA AS HORAS DE 3 em 3 horas
-          
-          <div className="result-date">
-            <span>{forecast ? weather.main.temp : ''} °C</span>
-            <img src={weather ? `http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png` : ''} alt="" />
-          </div>
-
-          <div className="result-data">
-            <span>Chuva: <b>7%</b></span>
-            <span>Umidade: <b>{weather ? weather.main.humidity : ''}%</b></span>
-            <span>Vento: <b>{weather ? weather.wind.speed : ''}Km/h</b></span>
-          </div> */}
-
         </section>
       </main>
     </div>

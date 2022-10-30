@@ -46,7 +46,7 @@
   main {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100%;
 
     align-items: center;
     justify-content: center;
@@ -184,4 +184,112 @@ form h3 {
   #App aside{/*ocupar a tela toda com o "cadastro"*/
       /* width: 100%; */
  /*} */
+
+ /* ----- Day a Day Forecast ----- */
+.forecast {
+  display: inline-block;
+}
+
+.forecast-days {
+  /* background-color: red; */
+  display: flex;
+}
+
+.forecast-days .option {
+  background: #fff;
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+
+  /* margin: 0 10px; */
+  text-align: center;
+  border-radius: 5px;
+  padding: 0 10px;
+  border: 2px solid lightgray;
+  transition: all 0.3s ease;
+}
+
+ .forecast input[type="radio"] {
+  display: none;
+ } 
+
+ .forecast-days .option span {
+  font-size: 20px;
+  color: #2D3540;
+ }
+
+ .forecast #day-one:checked:checked ~ .day-one,
+ .forecast #day-two:checked:checked ~ .day-two,
+ .forecast #day-three:checked:checked ~ .day-three,
+ .forecast #day-four:checked:checked ~ .day-four,
+ .forecast #day-five:checked:checked ~ .day-five {
+  /* border-color: #0069d9; */
+  border-color: #2D3540;
+  background: #0069d9;
+ }
+
+ .forecast #day-one:checked:checked ~ .day-one span,
+ .forecast #day-two:checked:checked ~ .day-two span,
+ .forecast #day-three:checked:checked ~ .day-three span,
+ .forecast #day-four:checked:checked ~ .day-four span,
+ .forecast #day-five:checked:checked ~ .day-five span {
+  color: #fff;
+  font-weight: bold;
+ }
+
+ /* -------------- RESULTADOS DAS PREVISÕES HORA A HORA -------------- */
+ .forecast-results {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+ }
+
+ .forecast-results-weather {
+  /* background-color: #0069d9; */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+  margin: 10px 0;
+  padding: 5px;
+  width: 90%;
+ }
+
+ .forecast-results-weather span {
+  font-weight: 400;
+  line-height: 30px;
+
+  width: 100%;
+  text-align: center;
+ }
+
+ .forecast-results-temperature{
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
+  justify-content: center;
+
+  width: 90%;
+  
+  padding: 20px;
+
+ }
+
+ .forecast-results-temperature span {
+  margin: 10px;
+  font-weight: 500;
+  line-height: 20px;
+ }
+
+ .forecast-results-temperature h4 {
+  align-self: center;
+  font-size: 18px;
+  font-weight: 600;
+ }
+
 }
