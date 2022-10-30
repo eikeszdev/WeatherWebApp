@@ -22,7 +22,6 @@
 /*qnd chegar a 1000px eu alinho tudo em coluna pra ficar 1 abaixo do outro*/
 
 /* Estilos gerais + Parte de fundo */
-@media (max-width: 1000px) {
   #App{
       flex-direction: column;
       /* height: 100vh; */
@@ -32,31 +31,45 @@
 
   body{
     background: linear-gradient(180deg, #2c3035 0%, #2D3540 100%);
+    height: 100vh
+  }
+
+  .Logo {
+    width: 50px;
+    height: 50px;
+    margin-right: 1em;
   }
 
   .Header {
-    background-color: red;
+    background-color: #22262B;
     width: 100%;
     height: 0.6fr;
-    
+    position: fixed;
+    top: 0;
     display: flex;
+    align-items: center;
     justify-content: space-between;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 5px 12px;
+    z-index: 99999;
+  }
+
+  .back {
+    margin-left: 1em;
   }
 
   main {
     display: flex;
     flex-direction: column;
     height: 100%;
-
+    max-width: 100vw;
     align-items: center;
     justify-content: center;
-
     background: linear-gradient(180deg, #2c3035 0%, #2c3542 100%);
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 7px 18px;
     padding: 2rem;
     border-radius: 1rem;
-    color: #fdfdfd;   
-    padding: 0;
+    color: #fdfdfd;
+    padding: 20px 0;
   }
 
   main h1 {
@@ -66,10 +79,11 @@
 /* Estilos gerais */
   .title {
     color:  #F2B705;
+    margin: 0vh 0 3vh 0;
   }
 
-  .subtitle {
-  }
+  /* .subtitle {
+  } */
 
   .hide {
     display: none;
@@ -77,18 +91,31 @@
 
 /* FORMS */
 
-form {    
-  /* background-color: #F2B705; */
+form {
   background: linear-gradient(180deg, rgb(245, 196, 50), #d4a619 100%);
-
+  max-width: 90vw;
   color: #2D3540;
-
   display: grid;
   grid-template-columns: 1fr;
-  
-  width: 90%;
-  border-radius: 4px;
-  padding: 10px 0px;
+  text-align: center;
+  border-radius: 1em;
+  margin-bottom: 3vh;
+  box-shadow: rgba(0, 0, 0, 0.6) 1px 2px 30px;
+}
+
+section {
+  max-width: 100vw !important;
+  background: linear-gradient(180deg, rgb(245, 196, 50), #d4a619 100%);
+  max-width: 90vw;
+  color: #2D3540;
+  display: grid;
+  grid-template-columns: 1fr;
+  text-align: center;
+  /* width: 90%; */
+  border-radius: 1em;
+  /* padding: 20px 0px; */
+  margin-bottom: 3vh;
+  box-shadow: rgba(0, 0, 0, 0.6) 1px 2px 30px;
 }
 
 form h3 {
@@ -96,68 +123,89 @@ form h3 {
   padding: 20px 0px;
 }
 
-.input-block {
+form .input-block {
+  max-width: 80vw;
   display: flex;
   flex-direction: column;
+  align-items: center;
   padding: 0px 20px 20px;
+
 }
 
 .input-block label {
   width: fit-content;
   font-weight: bold;
+  text-align: center;
 
 }
 
 .input-block input {
-  width: 40%;
+  width: 80vw;
+  height: 4vh;
   margin: 5px 0px 5px 0px;
-  padding: 8px;
   border: none;
-  flex: 1;
+  border-radius: 2em;
+  padding: 0 1vw 0 0.5vw;
+  text-align: center;
+  font-size: 1.3em;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 12px;
 }
 
 .form-button {
-  border-radius: 5px;
-  width: 20vh;
+  border-radius: 2em;
+  width: 35vw;
   height: 40px;
-  margin: auto;
+  /* margin: auto; */
   border: none;
   cursor: pointer;
-
+  margin: 0 1em 0.5em 1em;
+  font-size: 0.7em;
   background-color: #2D3540;
   color: #F2DBAE;
+  transition: ease 500ms;
+  box-shadow:  rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
+
+/* @media only screen and (max-width: 375px) {
+  .form-button {
+    width: 35vw;
+    font-size: 0.7em;
+  }
+} */
 
 /* RESULTS */
 
 .result {
-  margin: 20px 20px;
   display: flex;
+  padding: 2vh 10vw;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: linear-gradient(180deg, rgb(245, 196, 50), #d4a619 100%);
+  box-shadow:  rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .result span {
-  font-size: 20px;
-  font-weight: 400;
+  font-size: 1.5em;
+  font-weight: 500;
+
 }
 
 .result-title {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  padding: 0px 100px;
+  margin-top: 1em;
 }
 
 .result-title span{
-  font-size: 28px;
-  margin: 0px 20px;
+  font-size: 1.1em;
+  margin: 0 4vw;
   font-weight: bold;
 }
 
 .result-title img {
-  height: 30px;
-  width: 40px;
+  height: 9vh;
+  width: 20vw;
 }
 
 .result-date {
@@ -168,48 +216,65 @@ form h3 {
 }
 
 .result-date img {
-  height: 90px;
+  height: 13vh;
 }
 
 .result-data {
   display: flex;
   flex-direction: column;
-  line-height: 30px;
-}
-/* #App main{
-    margin-left: 0;
-    margin-top: 30px;
+  line-height: 4vh;
 }
 
-  #App aside{/*ocupar a tela toda com o "cadastro"*/
-      /* width: 100%; */
- /*} */
+.containerBtn {
+  /* display: flex; */
+  margin-bottom: 3vh;
+}
 
- /* ----- Day a Day Forecast ----- */
+
+.result-prevision {
+  display: flex;
+  /* padding: 2vh 10vw; */
+  padding: 10px;
+  width: 85vw;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(180deg, rgb(245, 196, 50), #d4a619 100%);
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 12px;
+}
+
+.result-prevision span {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.result-prevision p {
+  font-size: 0.9em;
+
+}
+
+ /* ----- Day a Day x ----- */
 .forecast {
   display: inline-block;
+  background: #22262B;
+  width: 80vw;
+  margin-top: 0.5em;
 }
 
 .forecast-days {
-  /* background-color: red; */
   display: flex;
 }
 
 .forecast-days .option {
-  background: #fff;
-  height: 100%;
-  width: 100%;
-
+  /* background: #fff; */
+  height: 5vh;
+  width: 15vw;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-evenly;
-
-  /* margin: 0 10px; */
+  padding: 0 10px;
   text-align: center;
   border-radius: 5px;
-  padding: 0 10px;
-  border: 2px solid lightgray;
   transition: all 0.3s ease;
 }
 
@@ -218,8 +283,19 @@ form h3 {
  } 
 
  .forecast-days .option span {
-  font-size: 20px;
-  color: #2D3540;
+  font-size: 0.8em;
+  color: #F2B705;
+  /* padding: 0 3em */
+ }
+
+ .forecast #day-one:checked:checked ~ .day-one {
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+ }
+
+ .forecast #day-five:checked:checked ~ .day-five {
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
  }
 
  .forecast #day-one:checked:checked ~ .day-one,
@@ -229,7 +305,7 @@ form h3 {
  .forecast #day-five:checked:checked ~ .day-five {
   /* border-color: #0069d9; */
   border-color: #2D3540;
-  background: #0069d9;
+  background: #F29F05;
  }
 
  .forecast #day-one:checked:checked ~ .day-one span,
@@ -238,7 +314,25 @@ form h3 {
  .forecast #day-four:checked:checked ~ .day-four span,
  .forecast #day-five:checked:checked ~ .day-five span {
   color: #fff;
-  font-weight: bold;
+ }
+
+ .forecast-hours {
+  width: 75vw;
+  height: 5vh;
+  padding: 1vh;
+  align-content: center;
+  justify-items: center;
+  border-radius: 30px;
+  background: #22262B;
+ }
+
+ .forecast-hours input[type="range"] {
+  width: 65vw;
+ }
+
+ .forecast-hours span {
+  font-size: 1em;
+  color:rgb(245, 196, 50)
  }
 
  /* -------------- RESULTADOS DAS PREVISÕES HORA A HORA -------------- */
@@ -291,5 +385,3 @@ form h3 {
   font-size: 18px;
   font-weight: 600;
  }
-
-}
