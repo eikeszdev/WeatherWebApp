@@ -25,7 +25,6 @@ function App() {
   const [hourForecast, setHourForecast] = useState();
   const [dayForecast, setDayForecast] = useState();
 
-
   useEffect(() => {
     console.log('UseEffect loads')
 
@@ -518,7 +517,7 @@ function App() {
           </div>
 
           <div className="result-date">
-            <span>{weather ? weather.main.temp : ''} °C</span>
+            <span>{weather ? parseInt(weather.main.temp) : ''} °C</span>
             <img src={weather ? `https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png` : ''} alt="" />
           </div>
 
@@ -575,7 +574,7 @@ function App() {
 
           <div className={hourForecast ? "forecast-results" : 'hide'}>
             <div className="forecast-results-weather">
-              <span className="forecast-results-weather-description">Temp. média do dia: <b>{hourForecast ? `${hourForecast[0].main.temp}°C` : ''}</b></span>
+              <span className="forecast-results-weather-description">Temp. média do dia: <b>{hourForecast ? `${parseInt(hourForecast[0].main.temp)}°C` : ''}</b></span>
               <img src={hourForecast ? `https://openweathermap.org/img/wn/${hourForecast[0].weather[0].icon}@2x.png` : ''} alt="" />
               <span>Previsão de: <b>{hourForecast ? `${hourForecast[0].weather[0].description}` : ''}</b></span>
               <span>Chance de chuva: <b>{hourForecast ? `${(hourForecast[0].pop * 100)}%` : ''}</b></span>
@@ -583,9 +582,9 @@ function App() {
 
             <div className="forecast-results-temperature">
               <h4>Mais informações:</h4>
-              <span>Temp. máxima: <b>{hourForecast ? `${hourForecast[0].main.temp_max}°C` : ''}</b></span>
-              <span>Temp. mínima: <b>{hourForecast ? `${hourForecast[0].main.temp_min}°C` : ''}</b></span>
-              <span>Sensação térmica: <b>{hourForecast ? `${hourForecast[0].main.feels_like}°C` : ''}</b></span>
+              <span>Temp. máxima: <b>{hourForecast ? `${parseInt(hourForecast[0].main.temp_max)}°C` : ''}</b></span>
+              <span>Temp. mínima: <b>{hourForecast ? `${parseInt(hourForecast[0].main.temp_min)}°C` : ''}</b></span>
+              <span>Sensação térmica: <b>{hourForecast ? `${parseInt(hourForecast[0].main.feels_like)}°C` : ''}</b></span>
               <span>Ventos: <b>{hourForecast ? `${hourForecast[0].wind.speed}Km/h` : ''}</b></span>
               <span>Presença de nuvens: <b>{hourForecast ? `${hourForecast[0].clouds.all}%` : ''}</b></span>
             </div>
