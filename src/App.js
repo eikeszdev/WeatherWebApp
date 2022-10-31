@@ -223,7 +223,8 @@ function App() {
       let monthUpdate = 0; // para saber se atualizo o mes ou não, já que se o dia mudar pra 1 o mês muda também
       
       console.log(lastDayOfMonth(dateFromTheDay, (parseInt(dateFromTheDay.day) + 1)) );
-      if(lastDayOfMonth(dateFromTheDay) === true){
+      if(lastDayOfMonth(dateFromTheDay, (parseInt(dateFromTheDay.day) + 1)) === true){
+        console.log('TRUE O 32')
         dayUpdated = 1; // atualizando para o primeiro dia do mês
         if(dateFromTheDay.month !== '12') { // se não for dezembro, só acrescenta 1
           monthUpdate = parseInt(dateFromTheDay.month) + 1;
@@ -522,7 +523,6 @@ function App() {
           </div>
 
           <div className="result-data">
-            <span>Chuva: <b>7%</b></span>
             <span>Umidade: <b>{weather ? weather.main.humidity : ''}%</b></span>
             <span>Vento: <b>{weather ? weather.wind.speed : ''}Km/h</b></span>
             <span>Qualidade do ar: <b>{airQuality ? airQuality : 'indisponível'}</b></span>
@@ -533,7 +533,6 @@ function App() {
         <section className={forecast ? `result-prevision` : 'hide'}>
 
             <span> Previsão para os próximos dias</span>
-            <p>A adicionar previsão dos 5 dias</p>
           <div className="result-title">
             <img src={forecast ? `https://countryflagsapi.com/png/${forecast.city.country}` : ''} alt="Bandeira do Brasil" />
             <span>{forecast ? forecast.city.name : ''}</span>
